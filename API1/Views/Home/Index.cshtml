@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@if  (ViewBag.Error != null)
+{
+<div>
+    <h2>Error: Status @ViewBag.Error</h2>
+    @ViewBag.ErrorDescription
+    <br />
+    @ViewBag.Data
+</div>
+}
+else
+{
+    <h2>Weather</h2>
+    @* @ViewBag.Data *@
+    <h3>Current</h3>
+    <img src="http://forecast.weather.gov/newimages/large/@ViewBag.Current["Weatherimage"]" style="padding:2px 8px" align="left"/>
+    <b><i>Observed @ViewBag.Current["Date"]</i></b><br />
+    <b>Current Temp:</b> @ViewBag.Current["Temp"]@Html.Raw("&deg;")<br />
+    <b>Conditions:</b> @ViewBag.Current["Weather"]<br />
+    <b>Wind:</b> @ViewBag.Current["Winds"] @Html.Raw("mph")<br />
+    <b>Visibility:</b> @ViewBag.Current["Visibility"]<br />
+    <b>Relative Humidity:</b> @ViewBag.Current["Relh"]<br />
+    <b>Atmospheric Pressure:</b> @ViewBag.Current["SLP"]<br />
+<h3>Forecast</h3>
+    
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th width="20%">Time</th>
+            <th width="10%">Temp</th>
+            <th width="10%">Forecast</th>
+            <th width="60%">Description</th>
+        </tr>
+
+        @for (int i = 0; i < ViewBag.Times.Count; i++)
+        {
+            <tr>
+                <td>@ViewBag.Times[i]</td>
+                <td>@ViewBag.Temps[i]</td>
+                <td><img src="@ViewBag.Icons[i]" 
+                         height="43" width="43" /></td>
+                <td>@ViewBag.Descs[i] 
+                @if (ViewBag.Rains[i] == null)
+                {
+                    <b>0% Chance of Rain </b>
+                }
+                else
+                {
+                    <b>@ViewBag.Rains[i]% Chance of Rain </b>
+                }
+                <br />
+                @*<span onclick="alert('@ViewBag.Texts[i]')">Show more</span>*@
+                    <i>
+                        <span id="text-@i" style="display:none">
+                            @ViewBag.Texts[i]
+                        </span>
+                    </i>
+                    <span id="link-@i"
+                       onclick="toggleMoreInfo('@i')">More Info</span>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+<script>
+    function toggleMoreInfo(fieldNumber) {
+        if (document.getElementById('text-' + fieldNumber).style.display
+                == "none") {
+            document.getElementById('text-' + fieldNumber).style.display = 'block';
+            document.getElementById('link-' + fieldNumber).innerHTML = 'Hide';
+        } else {
+            document.getElementById('text-' + fieldNumber).style.display = 'none';
+            document.getElementById('link-' + fieldNumber).innerHTML = 'Show more';
+        }
+    }
+</script>
